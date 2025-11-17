@@ -1,9 +1,40 @@
 import React, { Fragment, useContext } from "react";
 import ProductCategoryDropdown from "./ProductCategoryDropdown";
 import { HomeContext } from "./index";
+import { getAllProduct } from "../../admin/products/FetchApi";
+
 
 const ProductCategory = (props) => {
   const { data, dispatch } = useContext(HomeContext);
+
+  const handleUnifiedSearch = async () => {
+    dispatch({ type: "loading", payload: true });
+
+    try {
+      const response = await getAllProduct();
+      let products = response?.Products || [];
+
+      // Price filter
+      if (data.priceRange && data.priceRange !== 0) {
+        products = products.filter(
+          (p) => Number(p.pPrice) <= Number(data.priceRange)
+        );
+      }
+
+      // Text search filter
+      if (data.searchText && data.searchText.trim() !== "") {
+        products = products.filter((p) =>
+          p.pName.toLowerCase().includes(data.searchText.toLowerCase())
+        );
+      }
+
+      dispatch({ type: "setProducts", payload: products });
+    } catch (err) {
+      console.log(err);
+    }
+
+    dispatch({ type: "loading", payload: false });
+  };
 
   return (
     <Fragment>
@@ -15,9 +46,8 @@ const ProductCategory = (props) => {
               payload: !data.categoryListDropdown,
             })
           }
-          className={`flex items-center space-x-1 cursor-pointer ${
-            data.categoryListDropdown ? "text-yellow-700" : ""
-          }`}
+          className={`flex items-center space-x-1 cursor-pointer ${data.categoryListDropdown ? "text-yellow-700" : ""
+            }`}
         >
           <span className="text-md md:text-lg hover:text-yellow-700">
             Categories
@@ -45,9 +75,8 @@ const ProductCategory = (props) => {
                 payload: !data.filterListDropdown,
               })
             }
-            className={`flex items-center space-x-1 cursor-pointer ${
-              data.filterListDropdown ? "text-yellow-700" : ""
-            }`}
+            className={`flex items-center space-x-1 cursor-pointer ${data.filterListDropdown ? "text-yellow-700" : ""
+              }`}
           >
             <span className="text-md md:text-lg">Filter</span>
             <span>
@@ -75,9 +104,8 @@ const ProductCategory = (props) => {
                 payload: !data.searchDropdown,
               })
             }
-            className={`flex items-center space-x-1 cursor-pointer ${
-              data.searchDropdown ? "text-yellow-700" : ""
-            }`}
+            className={`flex items-center space-x-1 cursor-pointer ${data.searchDropdown ? "text-yellow-700" : ""
+              }`}
           >
             <span className="text-md md:text-lg">Search</span>
             <span>
