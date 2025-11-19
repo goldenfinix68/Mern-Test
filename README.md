@@ -19,7 +19,7 @@ You can find those components in ./src/components/shop/home/ProductCategoryDropd
 
 ![current image](./public/smd1.png)
 
-### 2. Provide two search input fields - one for title, one for category
+### 2. Provide two search input fields - one for title, one for description
 
 #### Enable users to perform a search using two keywords—one for the title and one for the description—allowing for more precise and relevant search results.
 ![current image](./public/smd2.png)
